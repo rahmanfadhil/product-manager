@@ -7,20 +7,24 @@ class Products extends StatelessWidget {
     print('[Products] Constructor');
   }
 
+  Widget _buildProductItem(BuildContext context, int index) {
+    return Card(
+      child: Column(
+        children: <Widget>[
+          Image.network('https://via.placeholder.com/400x250'),
+          Text(products[index])
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     print('[Products] Build');
 
-    return Column(
-      children: products
-          .map((element) => Card(
-                  child: Column(
-                children: <Widget>[
-                  Image.network('https://via.placeholder.com/400x250'),
-                  Text(element)
-                ],
-              )))
-          .toList(),
+    return ListView.builder(
+      itemBuilder: _buildProductItem,
+      itemCount: products.length,
     );
   }
 }
