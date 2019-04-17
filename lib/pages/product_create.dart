@@ -48,7 +48,12 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
               });
             },
           ),
+          SizedBox(
+            height: 10.0,
+          ),
           RaisedButton(
+            color: Theme.of(context).accentColor,
+            textColor: Colors.white,
             onPressed: () {
               final Map<String, dynamic> product = {
                 'title': titleValue,
@@ -57,6 +62,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
                 'image': "assets/thumbnail.png"
               };
               widget.addProduct(product);
+              Navigator.pushReplacementNamed(context, '/');
             },
             child: Text('Save'),
           )
