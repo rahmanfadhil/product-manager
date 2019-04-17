@@ -59,7 +59,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
                 'title': _titleValue,
                 'description': _descriptionValue,
                 'price': _priceValue,
-                'image': "assets/thumbnail.png"
+                'image': "assets/thumbnail.jpg"
               };
               widget.addProduct(product);
               Navigator.pushReplacementNamed(context, '/products');
