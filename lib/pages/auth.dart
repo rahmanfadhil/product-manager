@@ -8,8 +8,8 @@ class AuthPage extends StatefulWidget {
 }
 
 class _AuthPageState extends State<AuthPage> {
-  String emailValue = '';
-  String passwordValue = '';
+  String _emailValue = '';
+  String _passwordValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class _AuthPageState extends State<AuthPage> {
               keyboardType: TextInputType.emailAddress,
               onChanged: (String value) {
                 setState(() {
-                  emailValue = value;
+                  _emailValue = value;
                 });
               },
             ),
@@ -35,7 +35,7 @@ class _AuthPageState extends State<AuthPage> {
               obscureText: true,
               onChanged: (String value) {
                 setState(() {
-                  passwordValue = value;
+                  _passwordValue = value;
                 });
               },
             ),
@@ -45,8 +45,8 @@ class _AuthPageState extends State<AuthPage> {
               textColor: Colors.white,
               child: Text('LOGIN'),
               onPressed: () {
-                print(emailValue);
-                print(passwordValue);
+                print(_emailValue);
+                print(_passwordValue);
                 Navigator.pushReplacementNamed(context, '/products');
               },
             )
