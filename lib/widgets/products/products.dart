@@ -8,6 +8,7 @@ class Products extends StatelessWidget {
   Products(this.products) {
     print('[Products] Constructor');
   }
+
   Widget _buildProductList() {
     Widget productCard;
 
