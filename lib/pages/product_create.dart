@@ -85,7 +85,15 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
             textColor: Colors.white,
             onPressed: _submitForm,
             child: Text('Save'),
-          )
+          ),
+          // GestureDetector(
+          //   onTap: _submitForm,
+          //   child: Container(
+          //     color: Colors.green,
+          //     padding: EdgeInsets.all(10.0),
+          //     child: Text('My Button'),
+          //   ),
+          // ),
         ],
       ),
     );
