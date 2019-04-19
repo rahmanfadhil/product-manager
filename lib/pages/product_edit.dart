@@ -79,19 +79,19 @@ class _ProductEditPageState extends State<ProductEditPage> {
     if (selectedProductIndex == null) {
       addProduct(
         Product(
-          description: _formData['title'],
+          title: _formData['title'],
           image: _formData['image'],
           price: _formData['price'],
-          title: _formData['title'],
+          description: _formData['description'],
         ),
       );
     } else {
       updateProduct(
         Product(
-          description: _formData['title'],
+          title: _formData['title'],
           image: _formData['image'],
           price: _formData['price'],
-          title: _formData['title'],
+          description: _formData['description'],
         ),
       );
     }
