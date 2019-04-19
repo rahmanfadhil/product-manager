@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../models/product.dart';
+import '../scoped-models/products.dart';
 
 class ProductEditPage extends StatefulWidget {
   final Function addProduct;
@@ -75,13 +77,13 @@ class _ProductEditPageState extends State<ProductEditPage> {
     );
   }
 
-  void _submitForm() {
+  void _submitForm(Function addProduct, Function updateProduct) {
     if (!_formKey.currentState.validate()) {
       return;
     }
     _formKey.currentState.save();
     if (widget.product == null) {
-      widget.addProduct(
+      addProduct(
         Product(
           description: _formData['title'],
           image: _formData['image'],
@@ -90,7 +92,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
         ),
       );
     } else {
-      widget.updateProduct(
+      updateProduct(
         widget.productIndex,
         Product(
           description: _formData['title'],
@@ -102,6 +104,18 @@ class _ProductEditPageState extends State<ProductEditPage> {
     }
 
     Navigator.pushReplacementNamed(context, '/products');
+  }
+
+  Widget _buildSubmitButton() {
+    return ScopedModelDescendant<ProductsModel>(
+      builder: (BuildContext context, Widget child, ProductsModel model) {
+        return RaisedButton(
+          textColor: Colors.white,
+          onPressed: () => _submitForm(model.addProduct, model.updateProduct),
+          child: Text('Save'),
+        );
+      },
+    );
   }
 
   Widget _buildPageContent(BuildContext context) {
@@ -127,11 +141,7 @@ class _ProductEditPageState extends State<ProductEditPage> {
               SizedBox(
                 height: 10.0,
               ),
-              RaisedButton(
-                textColor: Colors.white,
-                onPressed: _submitForm,
-                child: Text('Save'),
-              ),
+              _buildSubmitButton(),
               // GestureDetector(
               //   onTap: _submitForm,
               //   child: Container(
