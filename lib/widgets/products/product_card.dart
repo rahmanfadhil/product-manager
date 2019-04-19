@@ -43,7 +43,7 @@ class ProductCard extends StatelessWidget {
           builder: (BuildContext context, Widget child, MainModel model) {
             return IconButton(
               color: Colors.red,
-              icon: Icon(model.products[productIndex].isFavorite
+              icon: Icon(model.allProducts[productIndex].isFavorite
                   ? Icons.favorite
                   : Icons.favorite_border),
               onPressed: () {
@@ -65,6 +65,7 @@ class ProductCard extends StatelessWidget {
           Image.asset(product.image),
           _buildTitlePriceRow(),
           AddressTag('Union Square, San Francisco'),
+          Text(product.userEmail),
           _buildActionButtons(context),
         ],
       ),
