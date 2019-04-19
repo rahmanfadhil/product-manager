@@ -2,7 +2,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../models/product.dart';
 
-class ProductsModel extends Model {
+mixin ProductsModel on Model {
   List<Product> _products = [];
   int _selectedProductIndex;
   bool _showFavorites = false;
