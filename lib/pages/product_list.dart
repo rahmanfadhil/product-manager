@@ -25,7 +25,7 @@ class _ProductListPageState extends State<ProductListPage> {
   Widget _buildEditButton(BuildContext context, int index, MainModel model) {
     return IconButton(
       onPressed: () {
-        model.selectProduct(index);
+        model.selectProduct(model.allProducts[index].id);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (BuildContext context) => ProductEditPage(),
@@ -48,7 +48,7 @@ class _ProductListPageState extends State<ProductListPage> {
               background: Container(color: Colors.red),
               onDismissed: (DismissDirection direction) {
                 if (direction == DismissDirection.startToEnd) {
-                  model.selectProduct(index);
+                  model.selectProduct(model.allProducts[index].id);
                   model.deleteProduct();
                 } else if (direction == DismissDirection.endToStart) {
                   print('Swipe end to start');
