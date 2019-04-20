@@ -12,7 +12,7 @@ mixin ConnectedProductsModel on Model {
   bool _isLoading = false;
 
   Future<bool> addProduct(
-      String title, String description, String image, double price) {
+      String title, String description, String image, double price) async {
     _isLoading = true;
     notifyListeners();
     final Map<String, dynamic> productData = {
@@ -24,37 +24,37 @@ mixin ConnectedProductsModel on Model {
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
     };
-    return http
-        .post('https://flutter-products-e9bec.firebaseio.com/products.json',
-            body: json.encode(productData))
-        .then(
-      (http.Response response) {
-        if (response.statusCode != 200 && response.statusCode != 201) {
-          _isLoading = false;
-          notifyListeners();
-          return false;
-        }
-        final Map<String, dynamic> responseData = json.decode(response.body);
-        final Product newProduct = Product(
-            id: responseData['name'],
-            title: title,
-            description: description,
-            image: productData['image'],
-            price: price,
-            userEmail: _authenticatedUser.email,
-            userId: _authenticatedUser.id);
-        _products.add(newProduct);
+
+    try {
+      final http.Response response = await http.post(
+          'https://flutter-products-e9bec.firebaseio.com/products.json',
+          body: json.encode(productData));
+
+      if (response.statusCode != 200 && response.statusCode != 201) {
         _isLoading = false;
-
         notifyListeners();
+        return false;
+      }
+      final Map<String, dynamic> responseData = json.decode(response.body);
+      final Product newProduct = Product(
+          id: responseData['name'],
+          title: title,
+          description: description,
+          image: productData['image'],
+          price: price,
+          userEmail: _authenticatedUser.email,
+          userId: _authenticatedUser.id);
+      _products.add(newProduct);
+      _isLoading = false;
 
-        return true;
-      },
-    ).catchError((Error error) {
+      notifyListeners();
+
+      return true;
+    } catch (err) {
       _isLoading = false;
       notifyListeners();
       return false;
-    });
+    }
   }
 }
 
@@ -158,7 +158,7 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     return http
         .get('https://flutter-products-e9bec.firebaseio.com/products.json')
-        .then(
+        .then<Null>(
       (http.Response response) {
         final Map<String, dynamic> productListData = json.decode(response.body);
         final List<Product> fetchedProductList = [];
@@ -188,10 +188,7 @@ mixin ProductsModel on ConnectedProductsModel {
         notifyListeners();
         _selProductId = null;
       },
-    ).catchError((Error error) {
-      _isLoading = false;
-      notifyListeners();
-    });
+    );
   }
 
   void toggleProductFavoriteStatus() {
