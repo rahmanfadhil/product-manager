@@ -11,7 +11,7 @@ mixin ConnectedProductsModel on Model {
   String _selProductId;
   bool _isLoading = false;
 
-  Future<Null> addProduct(
+  Future<bool> addProduct(
       String title, String description, String image, double price) {
     _isLoading = true;
     notifyListeners();
@@ -29,8 +29,12 @@ mixin ConnectedProductsModel on Model {
             body: json.encode(productData))
         .then(
       (http.Response response) {
+        if (response.statusCode != 200 && response.statusCode != 201) {
+          _isLoading = false;
+          notifyListeners();
+          return false;
+        }
         final Map<String, dynamic> responseData = json.decode(response.body);
-        print(responseData);
         final Product newProduct = Product(
             id: responseData['name'],
             title: title,
@@ -43,6 +47,8 @@ mixin ConnectedProductsModel on Model {
         _isLoading = false;
 
         notifyListeners();
+
+        return true;
       },
     );
   }
