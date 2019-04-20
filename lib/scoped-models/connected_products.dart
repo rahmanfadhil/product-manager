@@ -19,17 +19,25 @@ mixin ConnectedProductsModel on Model {
           'https://amp.thisisinsider.com/images/5a395a06fcdf1e2d008b461b-750-563.jpg',
       'price': price,
     };
-    http.post('https://flutter-products-e9bec.firebaseio.com/products.json',
-        body: json.encode(productData));
-    final Product newProduct = Product(
-        title: title,
-        description: description,
-        image: image,
-        price: price,
-        userEmail: _authenticatedUser.email,
-        userId: _authenticatedUser.id);
-    _products.add(newProduct);
-    notifyListeners();
+    http
+        .post('https://flutter-products-e9bec.firebaseio.com/products.json',
+            body: json.encode(productData))
+        .then(
+      (http.Response response) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        print(responseData);
+        final Product newProduct = Product(
+            id: responseData['name'],
+            title: title,
+            description: description,
+            image: image,
+            price: price,
+            userEmail: _authenticatedUser.email,
+            userId: _authenticatedUser.id);
+        _products.add(newProduct);
+        notifyListeners();
+      },
+    );
   }
 }
 
@@ -79,6 +87,16 @@ mixin ProductsModel on ConnectedProductsModel {
     _products.removeAt(selectedProductIndex);
     _selProductIndex = null;
     notifyListeners();
+  }
+
+  void fetchProducts() {
+    http
+        .get('https://flutter-products-e9bec.firebaseio.com/products.json')
+        .then(
+      (http.Response response) {
+        print(json.decode(response.body));
+      },
+    );
   }
 
   void toggleProductFavoriteStatus() {
