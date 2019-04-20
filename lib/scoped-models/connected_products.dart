@@ -9,9 +9,11 @@ mixin ConnectedProductsModel on Model {
   List<Product> _products = [];
   User _authenticatedUser;
   int _selProductIndex;
+  bool _isLoading = false;
 
   void addProduct(
       String title, String description, String image, double price) {
+    _isLoading = true;
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
@@ -37,6 +39,8 @@ mixin ConnectedProductsModel on Model {
             userEmail: _authenticatedUser.email,
             userId: _authenticatedUser.id);
         _products.add(newProduct);
+        _isLoading = false;
+
         notifyListeners();
       },
     );
@@ -92,6 +96,7 @@ mixin ProductsModel on ConnectedProductsModel {
   }
 
   void fetchProducts() {
+    _isLoading = true;
     http
         .get('https://flutter-products-e9bec.firebaseio.com/products.json')
         .then(
@@ -113,6 +118,8 @@ mixin ProductsModel on ConnectedProductsModel {
         });
 
         _products = fetchedProductList;
+        _isLoading = false;
+
         notifyListeners();
       },
     );
@@ -147,5 +154,11 @@ mixin ProductsModel on ConnectedProductsModel {
 mixin UsersModel on ConnectedProductsModel {
   void login(String email, String password) {
     _authenticatedUser = User(id: 'asdfasdf', email: email, password: password);
+  }
+}
+
+mixin UtilityModel on ConnectedProductsModel {
+  bool get isLoading {
+    return _isLoading;
   }
 }
