@@ -11,9 +11,10 @@ mixin ConnectedProductsModel on Model {
   int _selProductIndex;
   bool _isLoading = false;
 
-  void addProduct(
+  Future<Null> addProduct(
       String title, String description, String image, double price) {
     _isLoading = true;
+    notifyListeners();
     final Map<String, dynamic> productData = {
       'title': title,
       'description': description,
@@ -23,7 +24,7 @@ mixin ConnectedProductsModel on Model {
       'userEmail': _authenticatedUser.email,
       'userId': _authenticatedUser.id,
     };
-    http
+    return http
         .post('https://flutter-products-e9bec.firebaseio.com/products.json',
             body: json.encode(productData))
         .then(
@@ -34,7 +35,7 @@ mixin ConnectedProductsModel on Model {
             id: responseData['name'],
             title: title,
             description: description,
-            image: image,
+            image: productData['image'],
             price: price,
             userEmail: _authenticatedUser.email,
             userId: _authenticatedUser.id);
@@ -97,12 +98,19 @@ mixin ProductsModel on ConnectedProductsModel {
 
   void fetchProducts() {
     _isLoading = true;
+    notifyListeners();
     http
         .get('https://flutter-products-e9bec.firebaseio.com/products.json')
         .then(
       (http.Response response) {
         final Map<String, dynamic> productListData = json.decode(response.body);
         final List<Product> fetchedProductList = [];
+
+        if (productListData == null) {
+          _isLoading = false;
+          notifyListeners();
+          return;
+        }
 
         productListData.forEach((String productId, dynamic productData) {
           final product = Product(
