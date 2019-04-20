@@ -167,6 +167,7 @@ mixin ProductsModel on ConnectedProductsModel {
         _isLoading = false;
 
         notifyListeners();
+        _selProductId = null;
       },
     );
   }
