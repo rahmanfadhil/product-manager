@@ -18,6 +18,8 @@ mixin ConnectedProductsModel on Model {
       'image':
           'https://amp.thisisinsider.com/images/5a395a06fcdf1e2d008b461b-750-563.jpg',
       'price': price,
+      'userEmail': _authenticatedUser.email,
+      'userId': _authenticatedUser.id,
     };
     http
         .post('https://flutter-products-e9bec.firebaseio.com/products.json',
@@ -94,7 +96,24 @@ mixin ProductsModel on ConnectedProductsModel {
         .get('https://flutter-products-e9bec.firebaseio.com/products.json')
         .then(
       (http.Response response) {
-        print(json.decode(response.body));
+        final Map<String, dynamic> productListData = json.decode(response.body);
+        final List<Product> fetchedProductList = [];
+
+        productListData.forEach((String productId, dynamic productData) {
+          final product = Product(
+            id: productId,
+            title: productData['title'],
+            description: productData['description'],
+            image: productData['image'],
+            price: productData['price'],
+            userEmail: productData['userEmail'],
+            userId: productData['userId'],
+          );
+          fetchedProductList.add(product);
+        });
+
+        _products = fetchedProductList;
+        notifyListeners();
       },
     );
   }
