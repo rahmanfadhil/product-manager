@@ -50,7 +50,11 @@ mixin ConnectedProductsModel on Model {
 
         return true;
       },
-    );
+    ).catchError((Error error) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    });
   }
 }
 
@@ -88,7 +92,7 @@ mixin ProductsModel on ConnectedProductsModel {
     });
   }
 
-  Future<Null> updateProduct(
+  Future<bool> updateProduct(
       String title, String description, String image, double price) {
     _isLoading = true;
     notifyListeners();
@@ -120,24 +124,33 @@ mixin ProductsModel on ConnectedProductsModel {
             userId: _authenticatedUser.id);
         _products[selectedProductIndex] = newProduct;
         notifyListeners();
+        return true;
       },
-    );
+    ).catchError((Error error) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    });
   }
 
-  void deleteProduct() {
+  Future<bool> deleteProduct() {
     _isLoading = true;
     final deletedProductId = selectedProduct.id;
     _products.removeAt(selectedProductIndex);
     _selProductId = null;
     notifyListeners();
-    http
+    return http
         .delete(
             'https://flutter-products-e9bec.firebaseio.com/products/$deletedProductId.json')
         .then((http.Response response) {
       _isLoading = false;
       notifyListeners();
+      return true;
+    }).catchError((Error error) {
+      _isLoading = false;
+      notifyListeners();
+      return false;
     });
-    notifyListeners();
   }
 
   Future<Null> fetchProducts() {
@@ -175,7 +188,10 @@ mixin ProductsModel on ConnectedProductsModel {
         notifyListeners();
         _selProductId = null;
       },
-    );
+    ).catchError((Error error) {
+      _isLoading = false;
+      notifyListeners();
+    });
   }
 
   void toggleProductFavoriteStatus() {
