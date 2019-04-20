@@ -121,7 +121,7 @@ mixin ProductsModel on ConnectedProductsModel {
     notifyListeners();
     http
         .delete(
-            'https://flutter-products-e9bec.firebaseio.com/products/${deletedProductId}.json')
+            'https://flutter-products-e9bec.firebaseio.com/products/$deletedProductId.json')
         .then((http.Response response) {
       _isLoading = false;
       notifyListeners();
